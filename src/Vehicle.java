@@ -9,6 +9,7 @@ public class Vehicle {
 	private int speed;
 
 	Vehicle(int direction){		
+		this.direction = direction;
 		this.symbol = setSymbol(direction);
 		this.speed = setSpeed();
 	}
@@ -19,10 +20,10 @@ public class Vehicle {
 
 	private String setSymbol(int direction) {
 		switch(direction) {
-		case 1:return "v";
-		case 2: return ">";
-		case 3: return "^";
-		case 4: return "<";
+		case 0:return "v";
+		case 1: return ">";
+		case 2: return "^";
+		case 3: return "<";
 		default: return "";
 		}
 	}
@@ -31,10 +32,7 @@ public class Vehicle {
 		int speed=0;
 		Random rSpeed = new Random();
 		speed = rSpeed.nextInt(100);
-
-		if (speed <0)
-			speed = speed*(-1);
-
+		
 		return speed;
 	}
 
@@ -51,6 +49,70 @@ public class Vehicle {
 	}
 
 	
+
+	public String getSymbol() {
+		return symbol;
+	}
+
+
+
+
+
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
+
+
+
+
+
+	public int getDirection() {
+		return direction;
+	}
+
+
+
+
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+
+
+
+
+	public int getSpeed() {
+		return speed;
+	}
+
+
+
+
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+
+
+
+
+
+	public int getRow() {
+		return row;
+	}
+
+
+
+
+
+	public int getColumn() {
+		return column;
+	}
+
+
+
+
 
 	public void setColumn(int column) {
 		this.column = column;
