@@ -13,6 +13,29 @@ public class VehicleGenerator extends Thread{
 		this.grid = grid;
 	}
 
+	
+	/**
+	 * Method to determine what happens when the thread executes. 
+	 * Generates a Vehicle object and a Thread to move it every 0.25 seconds
+	 */
+	public void run() {
+		//while the thread that prints the grid is running, this thread runs as well
+		while (!grid.isDone()) {
+
+			//delay 0.25 seconds
+			try { 
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+
+				e.printStackTrace();
+			}
+
+			//and then create a Vehicle and a Thread to move it
+			generateVehicle();
+		}
+	}
+
+	
 	/**
 	 * Method that generates a Vehicle (model) object, with randomly generated characteristics. 
 	 * It then creates a thread according to the direction of the Vehicle, to which the Vehicle object is given.
@@ -49,28 +72,7 @@ public class VehicleGenerator extends Thread{
 		}
 		}
 	}
-
-
-	/**
-	 * Method to determine what happens when the thread executes
-	 */
-	public void run() {
-		//while the thread that prints the grid is running, this thread runs as well
-		while (!grid.isDone()) {
-
-			//delay 0.5 seconds
-			try { 
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-
-			//and then create a vehicle
-			generateVehicle();
-		}
-	}
-
+	
 
 	/**
 	 * Method creates a random number that represents the direction of the vehicle

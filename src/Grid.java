@@ -2,40 +2,50 @@ import java.util.concurrent.locks.*;
 
 public class Grid extends Thread{
 
-	private final int row = 10;
-	private final int col = 20;
-	private Vehicle [][] grid;
-	private boolean done = false;
+	//class instance variables
+	private final int row = 10; //variable for the number of rows: it is set to 10 adhering to the specifications
+	private final int col = 20; //variable for the number of columns: it is set to 10 adhering to the specifications
+	private Vehicle [][] grid; //a 2D array representing the junction
+	private boolean done = false; //a boolean flag variable to indicate that the printing thread has finished executing
 
-	private ReentrantLock gridLock = new ReentrantLock();
-	private Condition gridCondition = gridLock.newCondition();
+	private ReentrantLock gridLock = new ReentrantLock(); //variable for the ReentrantLock
+	private Condition gridCondition = gridLock.newCondition(); //variable for the Condition of the Lock
 
+	
+	/**
+	 * Grid constructor. Creates a rows x columns 2D array
+	 */
 	public Grid() {
 		this.grid = new Vehicle [row][col];
 	}
 
+	
+	/**
+	 * Method to add a Vehicle object in a position in the grid Array.
+	 * @param v
+	 */
 	public void addToGrid(Vehicle v) {
 		grid[v.getRow()][v.getColumn()] = v;
 	}
 
 
 	/**
-	 * Move vehicle from North to South
+	 * Method to "move" vehicle from North to South
 	 * @param v: the vehicle
 	 */
 	public void moveVerticalVehicle(Vehicle v) {
 
 		gridLock.lock();
 
-		// if the row that the vehicle is in, is not the last row of the grid
+		//if the row that the vehicle is in, is not the last row of the grid
 		if (v.getRow()<this.row-1) {
 			try {
-				//while next block is full, wait
+				//if next square is full, wait..
 				while (grid[v.getRow()+1][v.getColumn()] !=null) {
 					gridCondition.await();
 				}
 
-				//when next block is empty
+				//when we reach this point, the next square is empty
 				//set next block = vehicle
 				grid[v.getRow()+1][v.getColumn()] = v;
 
@@ -139,6 +149,7 @@ public class Grid extends Thread{
 		}
 		
 		done = true;
+		//System.exit(0);
 	}
 
 	/**
