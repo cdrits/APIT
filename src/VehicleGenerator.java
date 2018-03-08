@@ -2,74 +2,114 @@ import java.util.Random;
 
 public class VehicleGenerator extends Thread{
 
+	//class instance variable
 	private Grid grid;
-	private boolean stop = false;
 
+	/**
+	 * VehicleGenerator object constructor
+	 * @param grid
+	 */
 	VehicleGenerator(Grid grid){
 		this.grid = grid;
 	}
 
 	/**
-	 * Method that generates a Vehicle object and a thread to which the Vehicle object is given
+	 * Method that generates a Vehicle (model) object, with randomly generated characteristics. 
+	 * It then creates a thread according to the direction of the Vehicle, to which the Vehicle object is given.
 	 */
 	public void generateVehicle() {
-		
-		//First create a Vehicle object
-		
+
+		/*
+		 * First create a Vehicle object
+		 */
 		//set a random direction for the new Vehicle
 		int direction = randomDirection();		
-		
+
 		//create a new Vehicle object, passing it the direction
 		Vehicle v = new Vehicle(direction);
 
 		//determine Vehicle's starting position based on it's direction
-		setStartingPosition(v,direction);
+		setStartingPosition(v, direction);
 
-		/*
-		 *print vehicle stats for testing
-		 */
-		String s = "name: " + getName() + " starting position: (" + v.getRow() + ", "+ v.getColumn() + ") " + "/speed: " + v.getSpeed() + "/ direction: " + v.getDirection()+ "/ symbol: " + v.getSymbol();
-		System.out.println(s);
+		//add the Vehicle object to the grid
+		grid.addToGrid(v);
 
-		//Then create a MovingVehicle object (thread) which will be responsible for moving the Vehicle object
-		System.out.println(v);
-		MovingVehicle movingVehicle = new MovingVehicle(v);
-		
+		//create and iginite a thread according to the direction of the vehicle  
+		switch (v.getDirection()) 
+		{
+		case 0: { //the vehicle will move on the vertical axis 			
+			VerticalVehicle vert = new VerticalVehicle(grid,v);
+			vert.start();
+			break;
+		}
+		case 1: { //the vehicle will move on the horizontal axis
+			HorizontalVehicle hor = new HorizontalVehicle(grid,v);
+			hor.start();
+			break;
+		}
+		}
 	}
 
-	public void run() {
 
+	/**
+	 * Method to determine what happens when the thread executes
+	 */
+	public void run() {
+		//while the thread that prints the grid is running, this thread runs as well
 		while (!grid.isDone()) {
-			try {
-				Thread.sleep(250);
+
+			//delay 0.5 seconds
+			try { 
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
+
+			//and then create a vehicle
 			generateVehicle();
 		}
 	}
 
 
-	private void setStartingPosition(Vehicle v, int direction) {
-		switch(direction) {
+	/**
+	 * Method creates a random number that represents the direction of the vehicle
+	 * @return direction: the random direction of the vehicle
+	 */
+	private int randomDirection() {
+		int direction;
+		Random rn = new Random();
+		direction = rn.nextInt(2); //only create values 0 or 1 since these are the requirements of Spec1
 
+		return direction;
+	}
+
+
+	/**
+	 * Method that determines the starting position of the vehicle in accordance with it's direction
+	 * @param v: the Vehicle
+	 * @param direction: the direction of the Vehicle
+	 */
+	private void setStartingPosition(Vehicle v, int direction) {
+
+		switch(direction)
+		{
 		case 0: { //the vehicle is heading South
 			v.setRow(0);
 			v.setColumn(randomColumn());
 			break;
-
-		}case 1: { //the vehicle is heading East
+		}
+		case 1: { //the vehicle is heading East
 			v.setColumn(0);
 			v.setRow(randomRow());
 			break;
-
-		}case 2: { //the vehicle is heading North
+		}
+		case 2: { //the vehicle is heading North
 			v.setColumn(grid.getCol());
 			v.setRow(randomRow());
 			break;
-
-		}case 3:{ //the vehicle is heading West
+		}
+		case 3:{ //the vehicle is heading West
 			v.setColumn(randomColumn());
 			v.setRow(grid.getRow());
 			break;
@@ -77,29 +117,29 @@ public class VehicleGenerator extends Thread{
 		}
 	}
 
-	private int randomDirection() {
-		int direction;
-		Random rn = new Random();
-		direction = rn.nextInt(2);
 
-		return direction;
-	}
-
+	/**
+	 * Method that creates a random number for the starting column of the Vehicle
+	 * @return col: the random column number
+	 */
 	private int randomColumn() {
 		int col;
 		Random rn = new Random();
 		col = rn.nextInt(grid.getCol());
 
-		System.err.println("random col: "+ col);
 		return col;
 	}
 
+
+	/**
+	 * Method that creates a random number for the starting row of the Vehicle
+	 * @return row: the random row number
+	 */
 	private int randomRow() {
 		int row;
 		Random rn = new Random();
 		row = rn.nextInt(grid.getRow());
 
-		System.err.println("random row: "+ row);
 		return row;
 	}
 

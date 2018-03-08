@@ -5,6 +5,7 @@ public class Vehicle {
 	private String symbol;
 	private int row;
 	private int column;
+	
 	private int direction; //(0: south, 1: east, 2: north, 3: west)
 	private int speed;
 
@@ -13,10 +14,6 @@ public class Vehicle {
 		this.symbol = setSymbol(direction);
 		this.speed = setSpeed();
 	}
-
-	
-
-	
 
 	private String setSymbol(int direction) {
 		switch(direction) {
@@ -31,7 +28,7 @@ public class Vehicle {
 	private int setSpeed() {
 		int speed=0;
 		Random rSpeed = new Random();
-		speed = rSpeed.nextInt(100);
+		speed = rSpeed.nextInt(500);
 		
 		return speed;
 	}
@@ -48,73 +45,40 @@ public class Vehicle {
 		this.row = row;
 	}
 
-	
-
 	public String getSymbol() {
 		return symbol;
 	}
-
-
-
-
 
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
 
-
-
-
-
 	public int getDirection() {
 		return direction;
 	}
-
-
-
-
 
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
 
-
-
-
-
 	public int getSpeed() {
 		return speed;
 	}
-
-
-
-
 
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
 
-
-
-
-
 	public int getRow() {
 		return row;
 	}
-
-
-
-
-
+	
 	public int getColumn() {
 		return column;
 	}
 
-
-
-
-
 	public void setColumn(int column) {
 		this.column = column;
 	}
+		
 }
