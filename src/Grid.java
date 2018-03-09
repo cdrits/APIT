@@ -120,6 +120,94 @@ public class Grid extends Thread{
 
 	}
 
+	
+	/**
+	 * Method to "move" vehicle from South to North (for Specification 2)
+	 * @param v: the vehicle
+	 */
+	public void moveNorth(Vehicle v) {
+
+		gridLock.lock();
+		try {
+			//if the vehicle is in the last row, remove it from the grid
+			if (v.getRow()== 0) {
+				removeFromGrid(v);}
+			
+			//if the row that the vehicle is in, is not the last row of the grid
+			else if (v.getRow()>0) { 
+
+				//if next square is full, wait..
+				while (grid[v.getRow()-1][v.getColumn()] !=null) {
+					gridCondition.await();
+				}
+
+				//when we reach this point, the next square is empty
+				//set next block = vehicle
+				grid[v.getRow()-1][v.getColumn()] = v;
+
+				//set current block = null
+				if(v.getRow()>=0) {
+					grid[v.getRow()][v.getColumn()]= null;
+				}
+
+				//change vehicle's row
+				v.setRow((v.getRow()-1));
+				gridCondition.signalAll();
+			}
+		}catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		finally {gridLock.unlock();}
+		//if we are out of rows, remove vehicle from grid	
+
+
+	}
+	
+	/**
+	 * Method to "move" vehicle from South to North (for Specification 2)
+	 * @param v: the vehicle
+	 */
+	public void moveWest(Vehicle v) {
+
+		gridLock.lock();
+		try {
+			//if the vehicle is in the last row, remove it from the grid
+			if (v.getColumn()== 0) {
+				removeFromGrid(v);}
+			
+			//if the row that the vehicle is in, is not the last row of the grid
+			else if (v.getColumn()>0) { 
+
+				//if next square is full, wait..
+				while (grid[v.getRow()][v.getColumn()-1] !=null) {
+					gridCondition.await();
+				}
+
+				//when we reach this point, the next square is empty
+				//set next block = vehicle
+				grid[v.getRow()][v.getColumn()-1] = v;
+
+				//set current block = null
+				if(v.getColumn()>=0) {
+					grid[v.getRow()][v.getColumn()]= null;
+				}
+
+				//change vehicle's row
+				v.setColumn((v.getColumn()-1));
+				gridCondition.signalAll();
+			}
+		}catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
+
+		finally {gridLock.unlock();}
+		//if we are out of rows, remove vehicle from grid	
+
+
+	}
 
 	public void run() {
 

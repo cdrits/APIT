@@ -65,12 +65,22 @@ public class VehicleGenerator extends Thread{
 		//create and iginite a thread according to the direction of the vehicle  
 		switch (v.getDirection()) 
 		{
-		case 0: { //the vehicle will move on the vertical axis 			
+		case 0: { //the vehicle will move on the vertical axis, North to South
 			VerticalVehicle vert = new VerticalVehicle(grid,v);
 			vert.start();
 			break;
 		}
-		case 1: { //the vehicle will move on the horizontal axis
+		case 1: { //the vehicle will move on the horizontal axis, West to East
+			HorizontalVehicle hor = new HorizontalVehicle(grid,v);
+			hor.start();
+			break;
+		}
+		case 2: { //the vehicle will move on the vertical axis, South to North
+			VerticalVehicle vert = new VerticalVehicle(grid,v);
+			vert.start();
+			break;
+		}
+		case 3:{ //the vehicle will move on the horizontal axis, East to West
 			HorizontalVehicle hor = new HorizontalVehicle(grid,v);
 			hor.start();
 			break;
@@ -112,13 +122,13 @@ public class VehicleGenerator extends Thread{
 			break;
 		}
 		case 2: { //the vehicle is heading North
-			v.setColumn(grid.getCol());
-			v.setRow(randomRow());
+			v.setColumn(randomColumn());
+			v.setRow(grid.getRow()-1);
 			break;
 		}
 		case 3:{ //the vehicle is heading West
-			v.setColumn(randomColumn());
-			v.setRow(grid.getRow());
+			v.setColumn(grid.getCol()-1);
+			v.setRow(randomRow());
 			break;
 		}
 		}

@@ -5,6 +5,7 @@ public class VerticalVehicle extends Thread{
 	private Vehicle v; //instance variable for the vehicle
 	private Grid grid; //instance variable for the grid
 
+
 	/**
 	 * Constructor Method. Creates a VerticalVehicle object passing it a grid and a Vehicle object.
 	 * @param grid
@@ -20,15 +21,30 @@ public class VerticalVehicle extends Thread{
 	 */
 	public void run() {
 
-		//while in the grid boundaries
-		for (int i = 0; i< grid.getRow();i++) { 
-			//wait until the vehicle is ready to move (speed implementation)
-			try {
-				Thread.sleep(v.getSpeed());
-				//move the Vehicle in the grid
-				grid.moveSouth(v);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		if (v.getDirection() == 0) {
+			//while in the grid boundaries
+			for (int i = 0; i< grid.getRow();i++) { 
+				//wait until the vehicle is ready to move (speed implementation)
+				try {
+					Thread.sleep(v.getSpeed());
+					//move the Vehicle in the grid
+					grid.moveSouth(v);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}else if (v.getDirection() == 2)
+		{
+			//while in the grid boundaries
+			for (int i = grid.getRow(); i > 0; i--) { 
+				//wait until the vehicle is ready to move (speed implementation)
+				try {
+					Thread.sleep(v.getSpeed());
+					//move the Vehicle in the grid
+					grid.moveNorth(v);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
