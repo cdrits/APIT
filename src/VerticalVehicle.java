@@ -21,6 +21,7 @@ public class VerticalVehicle extends Thread{
 	 */
 	public void run() {
 
+		//select movement according to the direction of the vehicle
 		if (v.getDirection() == 0) {
 			//while in the grid boundaries
 			for (int i = 0; i< grid.getRow();i++) { 
@@ -48,4 +49,5 @@ public class VerticalVehicle extends Thread{
 			}
 		}
 	}
+
 }

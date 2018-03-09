@@ -14,7 +14,6 @@ public class HorizontalVehicle extends Thread{
 	HorizontalVehicle(Grid grid, Vehicle v){
 		this.grid= grid;
 		this.v= v;
-
 	}
 
 
@@ -22,6 +21,8 @@ public class HorizontalVehicle extends Thread{
 	 * Method to determine what happens when the thread executes
 	 */
 	public void run() {
+		
+		//select movement according to the direction of the vehicle
 		if (v.getDirection() == 1) {
 			//while in the grid boundaries
 			for (int i = 0; i< grid.getCol();i++) {

@@ -28,14 +28,16 @@ public class Grid extends Thread{
 		grid[v.getRow()][v.getColumn()] = v;
 	}
 
+	
 	/**
 	 * Method to remove a Vehicle object from the grid Array.
 	 * @param v: the vehicle
 	 */
-	public void removeFromGrid(Vehicle v) {
+	private void removeFromGrid(Vehicle v) {
 		grid[v.getRow()][v.getColumn()] = null;
 	}
 
+	
 	/**
 	 * Method to "move" vehicle from North to South
 	 * @param v: the vehicle
@@ -56,10 +58,10 @@ public class Grid extends Thread{
 				}
 
 				//when we reach this point, the next square is empty
-				//set next block = vehicle
+				//set next square = vehicle
 				grid[v.getRow()+1][v.getColumn()] = v;
 
-				//set current block = null
+				//set current square = null
 				if(v.getRow()>=0) {
 					grid[v.getRow()][v.getColumn()]= null;
 				}
@@ -74,11 +76,9 @@ public class Grid extends Thread{
 		}
 
 		finally {gridLock.unlock();}
-		//if we are out of rows, remove vehicle from grid	
-
-
 	}
 
+	
 	/**
 	 * Move vehicle from West to East
 	 * @param v: the vehicle
@@ -99,10 +99,10 @@ public class Grid extends Thread{
 				}
 
 				//when we reach this point, the next square is empty
-				//set next block = vehicle
+				//set next square = vehicle
 				grid[v.getRow()][v.getColumn()+1] = v;
 
-				//set current block = null
+				//set current square = null
 				if(v.getRow()>=0) {
 					removeFromGrid(v);
 				}
@@ -120,7 +120,7 @@ public class Grid extends Thread{
 
 	}
 
-	
+
 	/**
 	 * Method to "move" vehicle from South to North (for Specification 2)
 	 * @param v: the vehicle
@@ -129,10 +129,10 @@ public class Grid extends Thread{
 
 		gridLock.lock();
 		try {
-			//if the vehicle is in the last row, remove it from the grid
+			//if the vehicle is in the first row, remove it from the grid
 			if (v.getRow()== 0) {
 				removeFromGrid(v);}
-			
+
 			//if the row that the vehicle is in, is not the last row of the grid
 			else if (v.getRow()>0) { 
 
@@ -142,10 +142,10 @@ public class Grid extends Thread{
 				}
 
 				//when we reach this point, the next square is empty
-				//set next block = vehicle
+				//set next square = vehicle
 				grid[v.getRow()-1][v.getColumn()] = v;
 
-				//set current block = null
+				//set current square = null
 				if(v.getRow()>=0) {
 					grid[v.getRow()][v.getColumn()]= null;
 				}
@@ -160,10 +160,9 @@ public class Grid extends Thread{
 		}
 
 		finally {gridLock.unlock();}
-		//if we are out of rows, remove vehicle from grid	
-
 
 	}
+
 	
 	/**
 	 * Method to "move" vehicle from South to North (for Specification 2)
@@ -173,11 +172,11 @@ public class Grid extends Thread{
 
 		gridLock.lock();
 		try {
-			//if the vehicle is in the last row, remove it from the grid
+			//if the vehicle is in the first column, remove it from the grid
 			if (v.getColumn()== 0) {
 				removeFromGrid(v);}
-			
-			//if the row that the vehicle is in, is not the last row of the grid
+
+			//if the column that the vehicle is in, is not the last column of the grid
 			else if (v.getColumn()>0) { 
 
 				//if next square is full, wait..
@@ -186,15 +185,15 @@ public class Grid extends Thread{
 				}
 
 				//when we reach this point, the next square is empty
-				//set next block = vehicle
+				//set next square = vehicle
 				grid[v.getRow()][v.getColumn()-1] = v;
 
-				//set current block = null
+				//set current square = null
 				if(v.getColumn()>=0) {
 					grid[v.getRow()][v.getColumn()]= null;
 				}
 
-				//change vehicle's row
+				//change vehicle's column
 				v.setColumn((v.getColumn()-1));
 				gridCondition.signalAll();
 			}
@@ -204,11 +203,12 @@ public class Grid extends Thread{
 		}
 
 		finally {gridLock.unlock();}
-		//if we are out of rows, remove vehicle from grid	
-
-
 	}
 
+	
+	/**
+	 * The Grid thread prints the grid on the console.
+	 */
 	public void run() {
 
 		//print the grid for 2000 times
@@ -230,13 +230,11 @@ public class Grid extends Thread{
 
 		//when the grid is printed 2000 times, raise the flag for the VehicleGenerator to stop as well.
 		done = true;
-
-
-		//	System.exit(0);
 	}
 
+
 	/**
-	 * A method that prints the current state of the grid
+	 * Method that prints the current state of the grid
 	 */
 	private void printGrid () {
 		System.out.println("\n-----------------------------------------");
@@ -261,8 +259,7 @@ public class Grid extends Thread{
 
 
 	/**
-	 * Getters & Setters
-	 * @return
+	 * Setters
 	 */
 	public int getRow() {
 		return row;

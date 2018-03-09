@@ -5,7 +5,7 @@ public class VehicleGenerator extends Thread{
 	//class instance variable
 	private Grid grid;
 
-	
+
 	/**
 	 * VehicleGenerator object constructor
 	 * @param grid
@@ -44,9 +44,8 @@ public class VehicleGenerator extends Thread{
 	 * Method that generates a Vehicle (model) object, with randomly generated characteristics. 
 	 * It then creates a thread according to the direction of the Vehicle, to which the Vehicle object is given.
 	 */
-	public void generateVehicle() {
+	private void generateVehicle() {
 
-	
 		/*
 		 * First create a Vehicle object
 		 */
@@ -160,5 +159,4 @@ public class VehicleGenerator extends Thread{
 		return row;
 	}
 	
-
 }
