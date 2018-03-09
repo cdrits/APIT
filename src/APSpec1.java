@@ -12,6 +12,9 @@ public class APSpec1 {
 		//start both threads
 		grid.start();
 		vGen.start();
+		
+		
+		
 	}
 
 }

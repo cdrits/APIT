@@ -19,17 +19,17 @@ public class VerticalVehicle extends Thread{
 	 * Method to determine what happens when the thread executes
 	 */
 	public void run() {
-		
+
 		//while in the grid boundaries
-		while (v.getRow()<= grid.getRow()) {
+		for (int i = 0; i< grid.getRow();i++) { 
 			//wait until the vehicle is ready to move (speed implementation)
 			try {
 				Thread.sleep(v.getSpeed());
+				//move the Vehicle in the grid
+				grid.moveSouth(v);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			//move the Vehicle in the grid
-			grid.moveVerticalVehicle(v);
 		}
 	}
 }

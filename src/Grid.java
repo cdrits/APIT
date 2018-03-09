@@ -11,7 +11,7 @@ public class Grid extends Thread{
 	private ReentrantLock gridLock = new ReentrantLock(); //variable for the ReentrantLock
 	private Condition gridCondition = gridLock.newCondition(); //variable for the Condition of the Lock
 
-	
+
 	/**
 	 * Grid constructor. Creates a rows x columns 2D array
 	 */
@@ -19,27 +19,37 @@ public class Grid extends Thread{
 		this.grid = new Vehicle [row][col];
 	}
 
-	
+
 	/**
 	 * Method to add a Vehicle object in a position in the grid Array.
-	 * @param v
+	 * @param v: the vehicle
 	 */
 	public void addToGrid(Vehicle v) {
 		grid[v.getRow()][v.getColumn()] = v;
 	}
 
+	/**
+	 * Method to remove a Vehicle object from the grid Array.
+	 * @param v: the vehicle
+	 */
+	public void removeFromGrid(Vehicle v) {
+		grid[v.getRow()][v.getColumn()] = null;
+	}
 
 	/**
 	 * Method to "move" vehicle from North to South
 	 * @param v: the vehicle
 	 */
-	public void moveVerticalVehicle(Vehicle v) {
+	public void moveSouth(Vehicle v) {
 
 		gridLock.lock();
+		try {
+			//if the vehicle is in the last row, remove it from the grid
+			if (v.getRow()== this.row-1) {
+				removeFromGrid(v);}
+			//if the row that the vehicle is in, is not the last row of the grid
+			else if (v.getRow()<this.row-1) { 
 
-		//if the row that the vehicle is in, is not the last row of the grid
-		if (v.getRow()<this.row-1) {
-			try {
 				//if next square is full, wait..
 				while (grid[v.getRow()+1][v.getColumn()] !=null) {
 					gridCondition.await();
@@ -57,18 +67,15 @@ public class Grid extends Thread{
 				//change vehicle's row
 				v.setRow((v.getRow()+1));
 				gridCondition.signalAll();
-
-			}catch (InterruptedException e) {
-
-				e.printStackTrace();
 			}
+		}catch (InterruptedException e) {
 
-			finally {gridLock.unlock();}
-			//if we are out of rows, remove vehicle from grid	
-		}else {
-			grid[v.getRow()][v.getColumn()]= null;
-			gridLock.unlock();
+			e.printStackTrace();
 		}
+
+		finally {gridLock.unlock();}
+		//if we are out of rows, remove vehicle from grid	
+
 
 	}
 
@@ -76,81 +83,94 @@ public class Grid extends Thread{
 	 * Move vehicle from West to East
 	 * @param v: the vehicle
 	 */
-	public void moveHorizontalVehicle(Vehicle v) {
+	public void moveEast(Vehicle v) {
 
 		gridLock.lock();
+		try {
+			//if the vehicle is in the last column, remove it from the grid
+			if (v.getColumn()== this.col-1) {
+				removeFromGrid(v);}
+			//if the column that the vehicle is in, is not the last column of the grid
+			else if (v.getColumn()<this.col-1) { 
 
-		// if the row that the vehicle is in, is not the last row of the grid
-		if (v.getColumn()<this.col-1) {
-			try {
-				//while next block is full, wait
+				//if next square is full, wait..
 				while (grid[v.getRow()][v.getColumn()+1] !=null) {
 					gridCondition.await();
 				}
 
-				//when next block is empty
+				//when we reach this point, the next square is empty
 				//set next block = vehicle
 				grid[v.getRow()][v.getColumn()+1] = v;
 
 				//set current block = null
-				if(v.getColumn()>=0) {
-					grid[v.getRow()][v.getColumn()]= null;
+				if(v.getRow()>=0) {
+					removeFromGrid(v);
 				}
 
-				//change vehicle's row
+				//change vehicle's column
 				v.setColumn((v.getColumn()+1));
 				gridCondition.signalAll();
-
-			}catch (InterruptedException e) {
-
-				e.printStackTrace();
 			}
+		}catch (InterruptedException e) {
 
-			finally {gridLock.unlock();}
-			//if we are out of rows, remove vehicle from grid	
-		}else {
-			grid[v.getRow()][v.getColumn()]= null;
-			gridLock.unlock();
+			e.printStackTrace();
 		}
+
+		finally {gridLock.unlock();}
 
 	}
 
 
 	public void run() {
 
+		//print the grid for 2000 times
 		for (int l=0; l <= 2000; l++) {
 
+			//every 20 milliseconds
 			try {
 				Thread.sleep(20);
-
-				System.out.println("\n-----------------------------------------");
-				String sq = "";
-
-				for (int i=0;i<row;) {
-					System.out.print("|");
-					for (int j =0; j<col;j++) {
-						if (grid[i][j]==null) {
-							sq = " ";
-						}
-						else sq = grid[i][j].getSymbol();
-
-						System.out.print( sq+"|");
-					}
-					System.out.println();
-					i++;
-				}
-
-				System.out.println("-----------------------------------------");
-
+				gridLock.lock();
+				printGrid ();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				
+
+			}
+			finally {
+				gridLock.unlock();
 			}
 		}
-		
+
+		//when the grid is printed 2000 times, raise the flag for the VehicleGenerator to stop as well.
 		done = true;
-		//System.exit(0);
+
+
+		//	System.exit(0);
 	}
+
+	/**
+	 * A method that prints the current state of the grid
+	 */
+	private void printGrid () {
+		System.out.println("\n-----------------------------------------");
+		String sq = "";
+
+		for (int i=0;i<row;) {
+			System.out.print("|");
+			for (int j =0; j<col;j++) {
+				if (grid[i][j]==null) {
+					sq = " ";
+				}
+				else sq = grid[i][j].getSymbol();
+
+				System.out.print( sq+"|");
+			}
+			System.out.println();
+			i++;
+		}
+
+		System.out.println("-----------------------------------------");
+	}
+
 
 	/**
 	 * Getters & Setters

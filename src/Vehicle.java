@@ -28,14 +28,12 @@ public class Vehicle {
 	private int setSpeed() {
 		int speed=0;
 		Random rSpeed = new Random();
-		speed = rSpeed.nextInt(500);
+		speed = rSpeed.nextInt(200);
+		speed = (500 - speed); //in order to achieve "slower" speeds, which is useful for testing
 		
 		return speed;
 	}
 
-	public void move() {
-		
-	}
 	
 	/**
 	 * Getters & Setters

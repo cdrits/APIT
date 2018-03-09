@@ -24,15 +24,15 @@ public class HorizontalVehicle extends Thread{
 	public void run() {
 
 		//while in the grid boundaries
-		while (v.getColumn()<= grid.getCol()) {
+		for (int i = 0; i< grid.getCol();i++) {
 			//wait until the vehicle is ready to move (speed implementation)
-			try { 
+			try {
 				Thread.sleep(v.getSpeed());
+				//move the Vehicle in the grid
+				grid.moveEast(v);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			//move the Vehicle in the grid
-			grid.moveHorizontalVehicle(v);
 		}
 	}
 }
